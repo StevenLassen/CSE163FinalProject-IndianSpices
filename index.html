@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<h2> Indian Spices: Where Do They Go and Their Impact </h2>
+<p5> We are trying to show the importance of Indian spices by showing how widespread they are around the world and how they are essential to global cuisine. How so many popular dishes are dependent on Indian exports.
+ </p5>
+<style>
+    
+    
+* {
+
+text-align: center;
+
+}
+
+.counties {
+  fill: none;
+}
+
+.states {
+  fill: none;
+  stroke-linejoin: round;
+}
+    
+/*Define how our tooltip looks like*/
+div.tooltip {
+  color: white;
+  position: absolute;
+  display:inline;
+  width: 150px;
+  height: 43px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: rgba(0,0,0,.8);
+  border: 2px solid black;
+  pointer-events: none;
+}
+
+
+
+
+</style>
+<svg width="1200" height="600"></svg>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+<script>
+    
+/*
+TODOS:
+
+
+*/
+    
+/*
+Sources:
+https://www.youtube.com/watch?v=Qw6uAg3EO64
+https://github.com/alisle/world-110m-country-codes
+https://www.convertcsv.com/json-to-csv.htm
+
+Limiting it to spices:
+USA
+garam masala (anything with masala in its name)
+MADRAS spices
+NALLA KARAM POWDER
+MANGO SEEDSAS
+-Chutney Powder
+-Sambar Powder
+-Rasam Powder
+-Vangibath Powder
+-Puliyogare Powder 
+-PANCHPURAN
+-BIRYANI SPICE
+TIKKA MASALA SPICE 
+PANEER BHURJI SPICE
+NES CURRY LEAVES POWDER
+
+Canada:
+-CORIANDER POWDER
+-GARAM MASALA
+-FENUGREEK POWDER
+-BAY LEAVES
+-POPPY SEED
+-PEPPER POWDER
+
+Austrailia:
+MASALA MIX 
+MASALA POWDER 
+Dry Gingger Whole
+BUTTER CHICKEN SPICE MIX
+Nutmeg Powder
+Fennel Powder
+Cinnamon Powder
+
+UK:
+-CHAI spices
+-CUMIN POWDER
+-SAMBHAR POWDER
+
+Saudi Arabia:
+
+Qatar:
+CHICKEN MASALA POWDER
+DHAKKA MASALA POWDER
+-RED CHILLI POWDER
+-TURMERIC POWDER
+
+Oman:
+PICKLE POWDER
+OMANI MASALA POWDER
+
+New Zealand:
+-VATA SPICE MIX
+-TIKHALAL POWDER
+
+Excluded countries:
+Singapore
+bahrain
+Hong Kong
+Maldives
+Mauritius
+*/
+
+var showCounties = true;
+var schemeRed = true;
+
+    
+var chosenCountry;
+
+    
+    function changeProdName(product){
+    if((product.toUpperCase()).includes(("GARAM MASALA").toUpperCase())){return "Garam Masala"}
+    if((product.toUpperCase()).includes(("Nutmeg").toUpperCase())){return "Nutmeg Powder"}
+    if((product.toUpperCase()).includes(("BAY LEAVES").toUpperCase())){return "Bay Leaves"}
+    if((product.toUpperCase()).includes(("Curry Leaf").toUpperCase())){return "Bay Leaves"}
+    if((product.toUpperCase()).includes(("Cinnamon Powder").toUpperCase())){return "Cinnamon Powder"}
+    if((product.toUpperCase()).includes(("Cinamon").toUpperCase())){return "Cinnamon Powder"}
+    if((product.toUpperCase()).includes(("Cinnnamon Ground").toUpperCase())){return "Cinnamon Powder"}
+    if((product.toUpperCase()).includes(("Fennel Powder").toUpperCase())){return "Fennel Powder"}
+    if((product.toUpperCase()).includes(("Fennel Seeds").toUpperCase())){return "Fennel Powder"}
+    if((product.toUpperCase()).includes(("Feenal Seeds").toUpperCase())){return "Fennel Powder"}
+    if((product.toUpperCase()).includes(("Saunf").toUpperCase())){return "Fennel Powder"}
+    if((product.toUpperCase()).includes(("Pepper Powder").toUpperCase())){return "Pepper Powder"} 
+    if((product.toUpperCase()).includes(("Papper Powder").toUpperCase())){return "Pepper Powder"}
+    if((product.toUpperCase()).includes(("Coriander").toUpperCase())){return "Coriander Powder"}
+    if((product.toUpperCase()).includes(("Corainder").toUpperCase())){return "Coriander Powder"} 
+    if((product.toUpperCase()).includes(("Dhania Powder").toUpperCase())){return "Coriander Powder"}
+    if((product.toUpperCase()).includes(("Dhaniya").toUpperCase())){return "Coriander Powder"}
+    if((product.toUpperCase()).includes(("Fenugreek Powder").toUpperCase())){return "Fenugreek Powder"}
+    if((product.toUpperCase()).includes(("Methi").toUpperCase())){return "Fenugreek Powder"}
+    if((product.toUpperCase()).includes(("KASURI METHI").toUpperCase())){return "Fenugreek Powder"}
+    if((product.toUpperCase()).includes(("Panchpuran").toUpperCase())){return "Panchpuran"}
+    if((product.toUpperCase()).includes(("Biryani").toUpperCase())){return "Biryani Spice"} 
+    if((product.toUpperCase()).includes(("Biriyani").toUpperCase())){return "Biryani Spice"} 
+    if((product.toUpperCase()).includes(("Rasam Powder").toUpperCase())){return "Rasam Powder"}
+    if((product.toUpperCase()).includes(("Chutney Powder").toUpperCase())){return "Chutney Powder"}
+    if((product.toUpperCase()).includes(("Vangibath Powder").toUpperCase())){return "Vangibath Powder"}
+    if((product.toUpperCase()).includes(("Puliyogare Powder").toUpperCase())){return "Puliyogare Powder"}
+    if((product.toUpperCase()).includes(("Sambar Powder").toUpperCase())){return "Sambar Powder"}
+    if((product.toUpperCase()).includes(("Sambhar Powder").toUpperCase())){return "Sambar Powder"}  
+    if((product.toUpperCase()).includes(("Chai").toUpperCase())){return "Chai Spices"}
+    if((product.toUpperCase()).includes(("Cumin Powder").toUpperCase())){return "Cumin Powder"}
+    if((product.toUpperCase()).includes(("JEERA POWDERX500GMS").toUpperCase())){return "Cumin Powder"}
+    if((product.toUpperCase()).includes(("Jeera").toUpperCase())){return "Cumin Powder"}
+    if((product.toUpperCase()).includes(("Pepper Powder").toUpperCase())){return "Pepper Powder"}
+    if((product.toUpperCase()).includes(("Poppy Seed").toUpperCase())){return "Poppy Seed"}
+    if((product.toUpperCase()).includes(("Kabsa Spice").toUpperCase())){return "Kabsa Spice"} 
+    if((product.toUpperCase()).includes(("Madras Curry Powder").toUpperCase())){return "Madras Curry Powder"}
+    if((product.toUpperCase()).includes(("Chana Masala Powder").toUpperCase())){return "Chana Masala Powder"}
+    if((product.toUpperCase()).includes(("Chole Masala").toUpperCase())){return "Chana Masala Powder"} 
+    if((product.toUpperCase()).includes(("Meat Masala").toUpperCase())){return "Meat Masala"}
+    if((product.toUpperCase()).includes(("Mutton Masala Powder").toUpperCase())){return "Meat Masala"}
+    if((product.toUpperCase()).includes(("Meat Masala Powder").toUpperCase())){return "Meat Masala"}
+    if((product.toUpperCase()).includes(("Turmeric").toUpperCase())){return "Turmeric Powder"}
+    if((product.toUpperCase()).includes(("Curcuma").toUpperCase())){return "Turmeric Powder"}
+    if((product.toUpperCase()).includes(("Chilli Powder").toUpperCase())){return "Chilli Powder"}
+    if((product.toUpperCase()).includes(("Chilly Powder").toUpperCase())){return "Chilli Powder"}
+    if((product.toUpperCase()).includes(("Chillie Powder").toUpperCase())){return "Chillie Powder"}
+    if((product.toUpperCase()).includes(("Chillie Powder").toUpperCase())){return "Chillie Powder"}
+    if((product.toUpperCase()).includes(("CHILLIES(GENUS CAPSICUM)(SPICES)(API )").toUpperCase())){return "Chillie Powder"}
+    if((product.toUpperCase()).includes(("Capsicum").toUpperCase())){return "Chilli Powder"}
+    if((product.toUpperCase()).includes(("Tikhalal Powder").toUpperCase())){return "Chilli Powder"}
+    if((product.toUpperCase()).includes(("Pickle Masala").toUpperCase())){return "Pickle Masala"}
+    if((product.toUpperCase()).includes(("Pickle Powder").toUpperCase())){return "Pickle Masala"}
+    if((product.toUpperCase()).includes(("Garlic Paste").toUpperCase())){return "Garlic Paste"}
+    if((product.toUpperCase()).includes(("Vata Spice Mix").toUpperCase())){return "Vata Spice Mix"} 
+    if((product.toUpperCase()).includes(("Chaat Masala").toUpperCase())){return "Chaat Masala"}
+    if((product.toUpperCase()).includes(("Chat Masala").toUpperCase())){return "Chaat Masala"}
+    if((product.toUpperCase()).includes(("Mixed Herbs").toUpperCase())){return "Mixed Herbs"}
+    if((product.toUpperCase()).includes(("Karam").toUpperCase())){return "Karam Powder"} 
+    if((product.toUpperCase()).includes(("Kabab Masala").toUpperCase())){return "Kabab Masala"}
+    if((product.toUpperCase()).includes(("Pumpkin Spice").toUpperCase())){return "Kaddu"}
+    if((product.toUpperCase()).includes(("Ginger Powder").toUpperCase())){return "Ginger Powder"}
+    if((product.toUpperCase()).includes(("Ginger Spice").toUpperCase())){return "Ginger Powder"}
+    if((product.toUpperCase()).includes(("Cardamom").toUpperCase())){return "Cardamom"} 
+    if((product.toUpperCase()).includes(("Cardmom").toUpperCase())){return "Cardamom"}
+    if((product.toUpperCase()).includes(("Elaichi").toUpperCase())){return "Cardamom"}
+    if((product.toUpperCase()).includes(("Bhaji Masala").toUpperCase())){return "Bhaji Masala"}
+    if((product.toUpperCase()).includes(("Sabji Masala").toUpperCase())){return "Sabji Masala"}
+    if((product.toUpperCase()).includes(("Celery").toUpperCase())){return "Celery"}
+    if((product.toUpperCase()).includes(("Ambar Powder").toUpperCase())){return "Ambar Powder"}
+    if((product.toUpperCase()).includes(("Amchur").toUpperCase())){return "Amchur"}
+    if((product.toUpperCase()).includes(("Aamchur Powder").toUpperCase())){return "Amchur"}
+    if((product.toUpperCase()).includes(("Mustard").toUpperCase())){return "Mustard"}
+    if((product.toUpperCase()).includes(("Rai").toUpperCase())){return "Mustard"}
+    if((product.toUpperCase()).includes(("Jaggery").toUpperCase())){return "Jaggery"}
+    if((product.toUpperCase()).includes(("Dhania Jeera Powder").toUpperCase())){return "Dhania Jeera Powder"}
+    if((product.toUpperCase()).includes(("Poppy Seeds").toUpperCase())){return "Poppy Seeds"}
+    if((product.toUpperCase()).includes(("Poppy Seed").toUpperCase())){return "Poppy Seeds"}
+    if((product.toUpperCase()).includes(("Pulikulambu Powder").toUpperCase())){return "Pulikulambu Powder"}
+    if((product.toUpperCase()).includes(("Oregano").toUpperCase())){return "Oregano"}
+    if((product.toUpperCase()).includes(("Rosemary").toUpperCase())){return "Rosemary"}
+    if((product.toUpperCase()).includes(("Basil").toUpperCase())){return "Basil"} 
+    if((product.toUpperCase()).includes(("Ajwain").toUpperCase())){return "Ajwain"} 
+    if((product.toUpperCase()).includes(("Star Anise").toUpperCase())){return "Star Anise"}
+    if((product.toUpperCase()).includes(("Anise").toUpperCase())){return "Anise"}
+    if((product.toUpperCase()).includes(("Paprika").toUpperCase())){return "Paprika"}
+    if((product.toUpperCase()).includes(("Mace").toUpperCase())){return "Mace"}
+    if((product.toUpperCase()).includes(("Tamarind Powder").toUpperCase())){return "Tamarind Powder"}
+    if((product.toUpperCase()).includes(("Tulsi Licorice").toUpperCase())){return "Tulsi Licorice"} 
+    
+    return product;
+}
+    
+    
+    function filter(product, country){
+    if(( (product.toUpperCase()).includes(("GARAM MASALA").toUpperCase()) || 
+         (product.toUpperCase()).includes(("Nutmeg Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("BAY LEAVES").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Cinnamon Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Fennel Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Nutmeg Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("PEPPER POWDER").toUpperCase()) ||
+         (product.toUpperCase()).includes(("CORIANDER POWDER").toUpperCase()) ||
+         (product.toUpperCase()).includes(("FENUGREEK POWDER").toUpperCase()) ||
+         (product.toUpperCase()).includes(("BIRYANI SPICE").toUpperCase()) ||
+         (product.toUpperCase()).includes(("PANCHPURAN").toUpperCase()) || 
+         (product.toUpperCase()).includes(("Rasam Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Chutney Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Vangibath Powder").toUpperCase()) ||  
+         (product.toUpperCase()).includes(("Sambar Powder").toUpperCase()) || 
+         (product.toUpperCase()).includes(("Chai Spices").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Cumin Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Pepper Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Poppy Seed").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Kabsa Spice").toUpperCase()) || 
+         (product.toUpperCase()).includes(("Madras Curry Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Chana Masala Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Meat Masala").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Turmeric Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Chilli Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Pickle Masala").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Garlic Paste").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Vata Spice Mix").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Chaat Masala").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Mixed Herbs").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Karam Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Kabab Masala").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Kaddu").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Ginger Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Cardamom").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Bhaji Masala").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Sabji Masala").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Celery").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Ambar Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Amchur Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Mustard").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Jaggery").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Dhania Jeera Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Poppy Seeds").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Pulikulambu Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Oregano").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Rosemary").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Basil").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Ajwain").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Star Anise").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Anise").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Paprika").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Mace").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Tamarind Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Tulsi Licorice").toUpperCase())
+        
+       ) && country == chosenCountry){
+        
+       return true;
+    }
+    return false;
+}
+    
+    
+    var color;
+    
+     
+    color = d3.scaleThreshold()
+    //.domain([0, 1000, 2500, 5000, 7500, 10000, 15000, 50000])
+    //.domain([0, 1000, 3000, 6000, 8000, 12000, 14000, 16000])
+    .domain([0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
+    .range(d3.schemeOrRd[9]);
+    
+
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+var densityById = d3.map();
+var nameById = d3.map();
+var stateById = d3.map();
+ 
+var div = d3
+  .select('body')
+  .append('div')
+  .attr('class', 'tooltip')
+  .style('opacity', 0);
+    
+   var div2 = d3
+  .select('body')
+  .append('div')
+  .attr('class', 'jkjk')
+  .style('opacity', 0);
+    
+    
+
+var projection = d3.geoMercator()
+    .scale(130)
+    .translate([width / 2 - 50, height / 2 + 110]);
+
+var path = d3.geoPath()
+    .projection(projection);
+    
+
+    
+    
+    
+    
+    
+
+
+d3.queue()
+    .defer(d3.json, "110m.json")
+    .defer(d3.csv, "world-110m-country-codes.csv", function(d) { 
+    //console.log(parseInt(+d.StandardQty));
+   // if(parseInt(+d.id/1000) == 48){
+       nameById.set(d.id, d.name);
+       densityById.set(d.id, +d.imports);
+    //stateById.set(d.id, d.state);
+//}                                              
+    })
+    .await(ready);
+
+function ready(error, us) {
+  if (error) throw error;
+   
+    
+    
+     var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(100,40)");
+    
+    //change the rangeRound to make the color gradiant bar smaller
+    var x = d3.scaleSqrt()
+    .domain([0, 4500])
+    //.rangeRound([440, 610]);
+    //.rangeRound([440, 760]);
+    .rangeRound([440, 900]);
+    
+    g.selectAll("rect")
+  .data(color.range().map(function(d) {
+      d = color.invertExtent(d);
+      if (d[0] == null) d[0] = x.domain()[0];
+      if (d[1] == null) d[1] = x.domain()[1];
+      return d;
+    }))
+  .enter().append("rect")
+    .attr("height", 8)
+    .attr("x", function(d) { return x(d[0]); })
+    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+    .attr("fill", function(d) { return color(d[0]); });
+    
+    g.append("text")
+    .attr("class", "caption")
+    .attr("x", x.range()[0])
+    .attr("y", -6)
+    .attr("fill", "#000")
+    .attr("text-anchor", "start")
+    .attr("font-weight", "bold")
+    .text("Import Shipments");
+
+g.call(d3.axisBottom(x)
+    .tickSize(13)
+    .tickValues(color.domain()))
+  .select(".domain")
+    .remove();
+
+//this shows the state with the countie lines
+//if(showCounties){
+  svg.append("g")
+      .attr("class", "countries")
+    .selectAll("path")
+      .data(topojson.feature(us, us.objects.countries).features)
+    .enter().append("path")
+    .attr("fill",  function(d) { 
+      //36 = austrailia
+      
+      if(nameById.get(+d.id) == "India"){
+         return "#00FF00"; 
+       }
+      
+      if(densityById.get(+d.id) == 0){
+         return "#000000"; 
+       }
+      
+      return color(densityById.get(+d.id)); 
+  
+  })
+    .attr("stroke-width", "5px")
+      .attr("d", path)
+      .on('mouseover', function(d) {
+      var desc = "";
+     if(nameById.get(+d.id) == "India"){
+        desc = "Export Shipments:"
+    }else{
+       desc = "Import Shipments:"
+    }
+      div
+        .transition()
+        .duration(200)
+        .style('opacity', 0.9);
+      div
+        .html(
+    '<div style="text-align:center">' + nameById.get(+d.id) + '</div>' +
+    '<div style="text-align:center">' + desc + '</div>' +
+    '<div style="text-align:center">' + densityById.get(+d.id) + '</div>'
+      )
+        .style('left', d3.event.pageX + 'px')
+        .style('top', d3.event.pageY - 28 + 'px');
+    })
+    //make tooltip dissapear when mouse exits
+    .on('mouseout', function() {
+      div
+        .transition()
+        .duration(500)
+        .style('opacity', 0);
+    })
+     .on('click', d => {
+        if(densityById.get(+d.id) != 0 && nameById.get(+d.id) != chosenCountry && nameById.get(+d.id) != "India"){
+        chosenCountry = nameById.get(+d.id);
+        //d3.selectAll("svg > *").remove();
+        d3.select("#map").selectAll("#removable").remove();
+        //ready(error, us);
+        showBarChart();
+        showPopDish();
+  }
+    });
+   
+      
+      
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+function showBarChart(){
+/* ----------------------------------------------------------------------------
+File: BarGraphSample.js
+Contructs the Bar Graph using D3
+80 characters perline, avoid tabs. Indet at 4 spaces. See google style guide on
+JavaScript if needed.
+-----------------------------------------------------------------------------*/ 
+
+// Search "D3 Margin Convention" on Google to understand margins.
+// We need to offset the whole graph by some amount to make room for the y axis label
+var offsetX = 60;
+
+//How big the view window for our graph is going to be
+//The right margin had to be increased to make room for the 16th country
+var margin = {top: 10, right: 70, bottom: 150, left: 50},
+    width = 760 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+    
+
+// Define SVG. "g" means group SVG elements together. 
+//SVG stands for "Scalable Vector Graphics" and it means that it generates graphics that are vector graphics. And vector graphics are graphics that can be blown up or shrink as much as you'd like without a loss in quality.
+//Down here we define the dimensions of our view window
+    
+//Want to select a div instead of "body"
+//The way we would make the Bar Chart and the popular dishes element side by side would to make collumns with divs and put svg elements in them
+//Currently the bar chart spawns below the "Created by" text because it is always added onto the bottom of the body. The "Created by" text is in the body
+var svgBar = d3.select("#map").append("svg")
+    .attr("id", "removable")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+/* --------------------------------------------------------------------
+SCALE and AXIS are two different methods of D3. See D3 API Refrence and 
+look up SVG AXIS and SCALES. See D3 API Refrence to understand the 
+difference between Ordinal vs Linear scale.
+----------------------------------------------------------------------*/ 
+
+// Define X and Y SCALE.
+//xScale and yScale define the width and height of each individual bar in the bar graph once a value is passed into it.
+var xScale = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+var yScale = d3.scaleLinear().range([height, 30]);
+
+// Define X and Y AXIS
+// Define tick marks on the y-axis as shown on the output with an interval of 5 and $ sign
+var xAxis = d3.axisBottom(xScale);
+var yAxis = d3.axisLeft(yScale);
+
+var file = "/CountryData/" + chosenCountry + ".csv";
+
+
+d3.queue()
+.defer(d3.csv, file)
+.await(function(error, data) {
+    
+     //edit the selected spices to a simpler name
+    for(var i = 0; i < data.length; i++){
+        data[i].ProductDescription = changeProdName(data[i].ProductDescription);
+    }
+    
+    //remove all duplicates from the list of the data we're looking for
+    removeDuplicates("Garam Masala");
+    removeDuplicates("Nutmeg Powder");
+    removeDuplicates("Bay Leaves");
+    removeDuplicates("Cinnamon Powder");
+    removeDuplicates("Fennel Powder");
+    removeDuplicates("Nutmeg Powder");
+    removeDuplicates("Pepper Powder");
+    removeDuplicates("Coriander Powder");
+    removeDuplicates("Fenugreek Powder");
+    removeDuplicates("Biryani Spice");
+    removeDuplicates("Panchpuran"); 
+    removeDuplicates("Rasam Powder"); 
+    removeDuplicates("Chutney Powder");
+    removeDuplicates("Vangibath Powder");
+    removeDuplicates("Puliyogare Powder"); 
+    removeDuplicates("Sambar Powder"); 
+    removeDuplicates("Chai Spices"); 
+    removeDuplicates("Cumin Powder");
+    removeDuplicates("Pepper Powder");
+    removeDuplicates("Poppy Seed"); 
+    removeDuplicates("Kabsa Spice"); 
+    removeDuplicates("Madras Curry Powder");
+    removeDuplicates("Chana Masala Powder");
+    removeDuplicates("Meat Masala");
+    removeDuplicates("Turmeric Powder");
+    removeDuplicates("Chilli Powder");
+    removeDuplicates("Pickle Masala");
+    removeDuplicates("Garlic Paste");
+    removeDuplicates("Vata Spice Mix"); 
+    removeDuplicates("Chaat Masala");
+    removeDuplicates("Mixed Herbs"); 
+    removeDuplicates("Karam Powder");
+    removeDuplicates("Kabab Masala");
+    removeDuplicates("Kaddu");
+    removeDuplicates("Ginger Powder");
+    removeDuplicates("Cardamom");
+    removeDuplicates("Bhaji Masala");
+    removeDuplicates("Sabji Masala");
+    removeDuplicates("Celery");
+    removeDuplicates("Ambar Powder");
+    removeDuplicates("Amchur Powder");
+    removeDuplicates("Mustard");
+    removeDuplicates("Jaggery"); 
+    removeDuplicates("Dhania Jeera Powder");
+    removeDuplicates("Poppy Seeds");
+    removeDuplicates("Pulikulambu Powder");
+    removeDuplicates("Oregano");
+    removeDuplicates("Rosemary"); 
+    removeDuplicates("Basil");
+    removeDuplicates("Ajwain");
+    removeDuplicates("Star Anise"); 
+    removeDuplicates("Anise");
+    removeDuplicates("Paprika");
+    removeDuplicates("Mace"); 
+    removeDuplicates("Tamarind Powder"); 
+    removeDuplicates("Tulsi Licorice");
+    
+    //Bubble Sort the spices
+ for(i = 0; i < data.length; i++){
+    
+   // Last i elements are already in place 
+   for(j = 1; j < ( data.length - i); j++){
+      
+     // Checking if the item at present iteration
+     // is greater than the next iteration
+     if(+data[j-1].StandardQty < +data[j].StandardQty){
+        
+       // If the condition is true then swap them
+       var temp = data[j-1]
+       data[j-1] = data[j]
+       data[j] = temp;
+     }
+   }
+ }
+    
+    xScale.domain(data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)}).map(function(d){ 
+        
+        return d.ProductDescription; 
+    
+    }));
+    yScale.domain([0,d3.max(data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)}), function(d) {return +d.StandardQty; })]);
+    
+    // Creating rectangular bars to represent the data. 
+    //This defines the traits of each bar in the bar graph
+    svgBar.selectAll("rect")
+        //gather the data
+        .data(data)
+        //make that data able to be used
+        .enter()
+    
+        //create a rectangle
+        .append("rect")
+        .filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)})
+        //make an animation where it comes into frame
+        .transition().duration(1000)
+        .delay(function(d,i) {return i * 200;})
+        //set the x coordinate of a given bar. Make it scale to a value of gdp.country.
+        .attr("x", function(d) {
+            return xScale(d.ProductDescription) + offsetX;
+        })
+        //set the y coordinate of a given bar. Make it scale to a value of gdp.country.
+        .attr("y", function(d) {
+            return yScale(d.StandardQty);
+        })
+        //set the width and height of each bar with a simular method to setting the coordinates.
+        .attr("width", xScale.bandwidth())
+        .attr("height", function(d) {
+            return height - yScale(d.StandardQty);
+        })
+        //fill the recatanle with a rbg that is more blue the higher the gdp
+        .attr("fill", function(d) {
+            return "rgb(0, 0, " + Math.round(d.StandardQty/2) + ")";
+        });
+    
+
+   //this is for the white text inside of each bar in the bar graph
+    svgBar.selectAll("text")
+        //gather the data
+       .data(data)
+        //make that data able to be used
+       .enter()
+       //create text
+       .append("text")
+      .filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)})
+       //make the 0,0 coordinate of the text its center
+       .attr("text-anchor", "middle")
+       //make an animation where it comes into frame
+       .transition().duration(1000)
+       .delay(function(d,i) {return i * 200;})
+       //define the text to be of a given bar's associated quantity value
+       .text(function(d) {
+           //The text will only appear if the bar is above a certain height. Otherwise the text won't fit inside the bar.
+           if(height - yScale(d.StandardQty) > 13){
+            return parseInt(+d.StandardQty);
+            }
+        })
+       //set the x coordinate and offset it per bar generated
+       .attr("x", function(d) {
+            //return offsetX + xScale.bandwidth()/2 + (i * (xScale.bandwidth() + 11));
+             return xScale(d.ProductDescription) + offsetX + xScale.bandwidth()/2;
+        })
+       //set the y coordinate of the text to be the top of the bar and ten pixels down
+       .attr("y", function(d) {
+              return yScale(d.StandardQty) + 12;
+        })
+       //set text traits like the font and color
+       .attr("font-family", "sans-serif")
+       .attr("font-size", "11px")
+       .attr("fill", "white");
+  
+    
+    //Draws xAxis text
+    
+    svgBar.append("g")
+        //make an x axis
+        .attr("class", "x axis")
+        //move it to where we want it to be with the defined offsets
+        .attr("transform", "translate(" + offsetX + "," + height + ")")
+        //put xAxis on the webpage
+        .call(xAxis)
+        //define all of the text on this xAxis
+        .selectAll("text")
+        //Put the 0,0 coordinate of the text at 0,0
+        //this is so we can rotate it properally
+        .style("text-anchor", "end")
+        //rotate text 60 degrees
+        .attr("transform", "rotate(-60)")
+        .attr("dx", "-.8em")
+        .attr("dy", ".25em");
+        
+    
+    
+    //this make the y axis
+    svgBar.append("g")
+        //make a y axis
+        .attr("class", "y axis")
+        //set the y axis where we want it to be with the defined x offset
+        .attr("transform", "translate(" + offsetX + ",0)")
+        //put y axis on our webpage
+        .call(yAxis);
+    
+    //make y axis lable
+    svgBar.append("text")
+    //create label
+    .attr("class", "y label")
+    //define our text 
+    .text("Quantity Imported")
+    //put the 0,0 coordinate in the middle of our text for easy rotation
+    .attr("text-anchor", "middle")
+    //rotate text
+    .attr('transform', 'translate(' + 0 + ', ' + height/2 + ') rotate(-90)'); 
+    
+    svgBar.append("text")
+    //create label
+    .attr("class", "y label")
+    //define our text 
+    .text(chosenCountry + " Indian Spice Imports")
+    //put the 0,0 coordinate in the middle of our text for easy rotation
+    .attr("text-anchor", "middle")
+    //rotate text
+    .attr('transform', 'translate(' + 2*width/3 + ', ' + 2 + ')'); 
+    
+    
+    function removeDuplicates(dup){
+         var firsItem = true;
+    for(var j = 0; j < data.length; j++){
+        
+        if(data[j].ProductDescription == dup){
+            if(firsItem){
+               var saveIndex = j;
+            }
+            if(!firsItem){
+              
+              data[saveIndex].StandardQty = +data[saveIndex].StandardQty + +data[j].StandardQty;
+              data[j].ProductDescription = "unused";
+            }
+            firsItem = false;
+        }
+    }
+    }
+    
+    
+});
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+function showPopDish(){  
+    
+var offsetX = 60;
+
+//How big the view window for our graph is going to be
+//The right margin had to be increased to make room for the 16th country
+var margin = {top: 10, right: 70, bottom: 150, left: 50},
+    width = 760 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+    
+
+// Define SVG. "g" means group SVG elements together. 
+//SVG stands for "Scalable Vector Graphics" and it means that it generates graphics that are vector graphics. And vector graphics are graphics that can be blown up or shrink as much as you'd like without a loss in quality.
+//Down here we define the dimensions of our view window
+var svg = d3.select("#map").append("svg")
+    .attr("id", "removable")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+/* --------------------------------------------------------------------
+SCALE and AXIS are two different methods of D3. See D3 API Refrence and 
+look up SVG AXIS and SCALES. See D3 API Refrence to understand the 
+difference between Ordinal vs Linear scale.
+----------------------------------------------------------------------*/ 
+
+// Define X and Y SCALE.
+//xScale and yScale define the width and height of each individual bar in the bar graph once a value is passed into it.
+var xScale = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+var yScale = d3.scaleLinear().range([height, 0]);
+
+// Define X and Y AXIS
+// Define tick marks on the y-axis as shown on the output with an interval of 5 and $ sign
+var xAxis = d3.axisBottom(xScale);
+var yAxis = d3.axisLeft(yScale);
+
+
+
+
+
+
+
+/* --------------------------------------------------------------------
+To understand how to import data. See D3 API refrence on CSV. Understand
+the difference between .csv, .tsv and .json files. To import a .tsv or
+.json file use d3.tsv() or d3.json(), respectively.
+----------------------------------------------------------------------*/ 
+
+// data.csv contains the country name(key) and its GDP(value)
+// d.key and d.value are very important commands
+//Here we deine our data. Our data is an one array that is comprised of everything in the collum with the country heading and one array comprised of eveything with the gdp heading in the .csv
+var file = "/CountryData/" + chosenCountry + ".csv";
+
+
+d3.queue()
+.defer(d3.csv, file)
+.defer(d3.csv, "IndianFoodDatasetCSV.csv")
+.await(function(error, data, recipes) {
+    
+    
+     //edit the selected spices to a simpler name
+    for(var i = 0; i < data.length; i++){
+        data[i].ProductDescription = changeProdName(data[i].ProductDescription);
+    }
+    
+    //remove the word "Recipe" from the dish names
+    for(var j = 0; j < recipes.length; j++){
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace('(Recipe)','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace('Recipe','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace(' Recipe','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace('Recipe ','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace(' Recipe ','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace('recipe','');
+    }
+    
+
+    
+    
+    //remove all duplicates from the list of the data we're looking for
+    removeDuplicates("Garam Masala");
+    removeDuplicates("Nutmeg Powder");
+    removeDuplicates("Bay Leaves");
+    removeDuplicates("Cinnamon Powder");
+    removeDuplicates("Fennel Powder");
+    removeDuplicates("Nutmeg Powder");
+    removeDuplicates("Pepper Powder");
+    removeDuplicates("Coriander Powder");
+    removeDuplicates("Fenugreek Powder");
+    removeDuplicates("Biryani Spice");
+    removeDuplicates("Panchpuran");
+    removeDuplicates("Rasam Powder"); 
+    removeDuplicates("Chutney Powder");
+    removeDuplicates("Vangibath Powder");
+    removeDuplicates("Puliyogare Powder");
+    removeDuplicates("Sambar Powder");
+    removeDuplicates("Chai Spices");
+    removeDuplicates("Cumin Powder");
+    removeDuplicates("Pepper Powder");
+    removeDuplicates("Poppy Seed");
+    removeDuplicates("Kabsa Spice");
+    removeDuplicates("Madras Curry Powder");
+    removeDuplicates("Chana Masala Powder");
+    removeDuplicates("Meat Masala");
+    removeDuplicates("Turmeric Powder");
+    removeDuplicates("Chilli Powder");
+    removeDuplicates("Pickle Masala");
+    removeDuplicates("Garlic Paste");
+    removeDuplicates("Vata Spice Mix");
+    removeDuplicates("Chaat Masala");
+    removeDuplicates("Mixed Herbs");
+    removeDuplicates("Karam Powder");
+    removeDuplicates("Kabab Masala");
+    removeDuplicates("Kaddu");
+    removeDuplicates("Ginger Powder");
+    removeDuplicates("Cardamom");
+    removeDuplicates("Bhaji Masala");
+    removeDuplicates("Sabji Masala");
+    removeDuplicates("Celery");
+    removeDuplicates("Ambar Powder");
+    removeDuplicates("Amchur Powder");
+    removeDuplicates("Mustard");
+    removeDuplicates("Jaggery");
+    removeDuplicates("Dhania Jeera Powder");
+    removeDuplicates("Poppy Seeds");
+    removeDuplicates("Pulikulambu Powder");
+    removeDuplicates("Oregano");
+    removeDuplicates("Rosemary");
+    removeDuplicates("Basil");
+    removeDuplicates("Ajwain");
+    removeDuplicates("Star Anise");
+    removeDuplicates("Anise");
+    removeDuplicates("Paprika");
+    removeDuplicates("Mace");
+    removeDuplicates("Tamarind Powder");
+    removeDuplicates("Tulsi Licorice");
+    
+//Bubble Sort the spices
+ for(i = 0; i < data.length; i++){
+    
+   // Last i elements are already in place 
+   for(j = 1; j < ( data.length - i); j++){
+      
+     // Checking if the item at present iteration
+     // is greater than the next iteration
+     if(+data[j-1].StandardQty < +data[j].StandardQty){
+        
+       // If the condition is true then swap them
+       var temp = data[j-1]
+       data[j-1] = data[j]
+       data[j] = temp;
+     }
+   }
+ }
+    
+    filterdData = data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)});
+    
+    
+    xScale.domain(data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)}).map(function(d){ 
+        
+        return d.ProductDescription; 
+    
+    }));
+    
+    yScale.domain([0,d3.max(data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)}), function(d) {return +d.StandardQty; })]);
+    
+   
+   //rank the recipes
+ for(i = 0; i < recipes.length; i++){
+    
+   // Last i elements are already in place 
+   for(j = 0; j < filterdData.length; j++){
+       if((recipes[i].TranslatedIngredients.toUpperCase()).includes((filterdData[j].ProductDescription).toUpperCase())){
+           recipes[i].rank =  +recipes[i].rank + (filterdData.length - j);
+       }
+     
+   }
+ }
+    
+    
+    //Bubble Sort recipes based on rank
+ for(i = 0; i < recipes.length; i++){
+    
+   // Last i elements are already in place 
+   for(j = 1; j < ( recipes.length - i); j++){
+      
+     // Checking if the item at present iteration
+     // is greater than the next iteration
+     if(+recipes[j-1].rank < +recipes[j].rank){
+        
+       // If the condition is true then swap them
+       temp = recipes[j-1]
+       recipes[j-1] = recipes[j]
+       recipes[j] = temp;
+     }
+   }
+ }
+    
+    
+    
+    
+    //legend box
+        svg.append("rect")
+        //set the x coordinate of a given bar. Make it scale to a value of gdp.country.
+       .attr("x", width/3)
+        //set the y coordinate of a given bar. Make it scale to a value of gdp.country.
+        .attr("y", 0)
+        //set the width and height of each bar with a simular method to setting the coordinates.
+        .attr("width", 2*width/3 + 30)
+        .attr("height", height)
+        .style("stroke-width", 2)    // set the stroke width
+        .style("stroke", "black") 
+        //fill the recatanle with a rbg that is more blue the higher the gdp
+        //.attr("fill", "white");
+        .attr("fill", "lightgray");
+
+
+    
+   //this is for the white text inside of each bar in the bar graph
+    svg.selectAll("text")
+        //gather the data
+     .data(recipes)
+     .enter()
+       //create text
+       .append("text")
+        //.filter(function(d) { return filter(d.TranslatedIngredients, chosenCountry)})
+       //make the 0,0 coordinate of the text its center
+    
+       .attr("text-anchor", "middle")
+       //make an animation where it comes into frame
+       .transition().duration(1000)
+       .delay(function(d,i) {return i * 200;})
+       //define the text to be of a given bar's associated gdp value
+        //use .html for spacing
+       .text(function(d,i) {
+           if(i < 6){
+            //return "rank: " + d.rank;
+            return d.TranslatedRecipeName;
+            }
+        })
+        
+       //set the x coordinate and offset it per bar generated
+       .attr("x", function(d) {
+            return 2*width/3 + 15;
+        })
+       //set the y coordinate of the text to be the top of the bar and ten pixels down
+       .attr("y", function(d,i) {
+            return height/4 + (i * 40);
+        })
+       //set text traits like the font and color
+       .attr("font-family", "sans-serif")
+       .attr("font-size", "11px")
+       .attr("fill", "black");
+    
+  
+    
+    //this is for the white text inside of each bar in the bar graph
+    svg.selectAll("text2")
+        //gather the data
+     .data(recipes)
+     .enter()
+       //create text
+       .append("text")
+        //.filter(function(d) { return filter(d.TranslatedIngredients, chosenCountry)})
+       //make the 0,0 coordinate of the text its center
+    
+       .attr("text-anchor", "middle")
+       //make an animation where it comes into frame
+       .transition().duration(1000)
+       .delay(function(d,i) {return i * 200;})
+       //define the text to be of a given bar's associated gdp value
+        //use .html for spacing
+       .text(function(d,i) {
+            if(i < 6){
+            return "Contains: " + contains(d.TranslatedIngredients);
+            }
+        })
+        
+       //set the x coordinate and offset it per bar generated
+       .attr("x", function(d) {
+            return 2*width/3 + 15;
+        })
+       //set the y coordinate of the text to be the top of the bar and ten pixels down
+       .attr("y", function(d,i) {
+            return height/4 + 20 + (i * 40);
+        })
+       //set text traits like the font and color
+       .attr("font-family", "sans-serif")
+       .attr("font-size", "11px")
+       .attr("fill", "black");
+    
+    
+    
+    //make y axis lable
+    svg.append("text")
+    //create label
+    .attr("class", "y label")
+    //define our text 
+    .text("Top 5 Most Popular Indian Dishes in: " + chosenCountry)
+    //put the 0,0 coordinate in the middle of our text for easy rotation
+    .attr("font-size", "20px")
+    .attr("text-anchor", "middle")
+    //rotate text
+    .attr('transform', 'translate(' + (2*width/3 + 15) + ',' + 40 + ')'); 
+    
+    //make y axis lable
+    svg.append("text")
+    //create label
+    .attr("class", "y label")
+    //define our text 
+    .text("Based on Import Data")
+    //put the 0,0 coordinate in the middle of our text for easy rotation
+    .attr("font-size", "15px")
+    .attr("text-anchor", "middle")
+    //rotate text
+    .attr('transform', 'translate(' + (2*width/3 + 15) + ',' + 60 + ')'); 
+  
+    
+    /*
+    //Draws xAxis text
+    svg.append("g")
+        //make an x axis
+        .attr("class", "x axis")
+        //move it to where we want it to be with the defined offsets
+        .attr("transform", "translate(" + offsetX + "," + height + ")")
+        //put xAxis on the webpage
+        .call(xAxis)
+        //define all of the text on this xAxis
+        .selectAll("text")
+        //Put the 0,0 coordinate of the text at 0,0
+        //this is so we can rotate it properally
+        .style("text-anchor", "end")
+        //rotate text 60 degrees
+        .attr("transform", "rotate(-60)")
+        .attr("dx", "-.8em")
+        .attr("dy", ".25em");
+        
+    
+    
+    //this make the y axis
+    svg.append("g")
+        //make a y axis
+        .attr("class", "y axis")
+        //set the y axis where we want it to be with the defined x offset
+        .attr("transform", "translate(" + offsetX + ",0)")
+        //put y axis on our webpage
+        .call(yAxis);
+    
+    //make y axis lable
+    svg.append("text")
+    //create label
+    .attr("class", "y label")
+    //define our text 
+    .text("Number of Imports")
+    //put the 0,0 coordinate in the middle of our text for easy rotation
+    .attr("text-anchor", "middle")
+    //rotate text
+    .attr('transform', 'translate(' + 0 + ', ' + height/2 + ') rotate(-90)');  
+    */
+    
+     function removeDuplicates(dup){
+         var firsItem = true;
+    for(var j = 0; j < data.length; j++){
+        
+        if(data[j].ProductDescription == dup){
+            if(firsItem){
+               var saveIndex = j;
+            }
+            if(!firsItem){
+              
+              data[saveIndex].StandardQty = +data[saveIndex].StandardQty + +data[j].StandardQty;
+              data[j].ProductDescription = "unused";
+            }
+            firsItem = false;
+        }
+    }
+    }
+    
+    
+    
+    
+    function contains(recipe){
+    var filterdData = data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)});
+        var spiceList = "";
+        var length = 0;
+        //maxLength = 2 means that it will display only one spice before we get "..."
+        var maxLength = 5;
+        
+         for (var i = 0; i < filterdData.length; i++){
+        
+          if(length < maxLength){
+          if((recipe.toUpperCase()).includes((filterdData[i].ProductDescription).toUpperCase())){
+          if(spiceList != ""){
+             spiceList += ", "
+          }
+              
+        length++;
+            
+          if(length < maxLength){
+          spiceList += filterdData[i].ProductDescription;
+        }else{
+           spiceList += "...";  
+        }
+    
+          }
+              
+    }else{
+        return spiceList; 
+    }
+         }
+        
+    return spiceList;
+    }
+    
+    /*
+    
+    Alternative method for determining popularity:
+    At the start of the function give each recipe a "rank". This rank is determined by checking each recipe with each spice the country has and for each spice the recipe contains it increases each recipes rank. The rank increase is determined by where the spice places among the other spices in the sorted array with the highest quantity spice giving a total equal to the length  of the filtered array. Then once each recipe is ranked we arrange them from largest to smallest via bubblesort and simpily display them in order when it's time to see the most popular dishes.
+    
+    */
+    
+});
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+/*
+function showPopDish(){  
+    
+var offsetX = 60;
+
+//How big the view window for our graph is going to be
+//The right margin had to be increased to make room for the 16th country
+var margin = {top: 10, right: 70, bottom: 150, left: 50},
+    width = 760 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+    
+
+// Define SVG. "g" means group SVG elements together. 
+//SVG stands for "Scalable Vector Graphics" and it means that it generates graphics that are vector graphics. And vector graphics are graphics that can be blown up or shrink as much as you'd like without a loss in quality.
+//Down here we define the dimensions of our view window
+var svg = d3.select("#map").append("svg")
+    .attr("id", "removable")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+// Define X and Y SCALE.
+//xScale and yScale define the width and height of each individual bar in the bar graph once a value is passed into it.
+var xScale = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+var yScale = d3.scaleLinear().range([height, 0]);
+
+// Define X and Y AXIS
+// Define tick marks on the y-axis as shown on the output with an interval of 5 and $ sign
+var xAxis = d3.axisBottom(xScale);
+var yAxis = d3.axisLeft(yScale);
+
+
+
+
+
+
+
+
+// data.csv contains the country name(key) and its GDP(value)
+// d.key and d.value are very important commands
+//Here we deine our data. Our data is an one array that is comprised of everything in the collum with the country heading and one array comprised of eveything with the gdp heading in the .csv
+var file = chosenCountry + ".csv";
+
+
+d3.queue()
+.defer(d3.csv, file)
+.defer(d3.csv, "IndianFoodDatasetCSV.csv")
+.await(function(error, data, recipes) {
+    var filterdData;
+    var length = 0;
+    var maxLength = 5;
+    var yOffset = 0;
+    var filteredRecipes1;
+    var filteredRecipes2;
+    var filteredRecipes3;
+    var filteredRecipes4;
+    var filteredRecipes5;
+    var filteredRecipes6;
+    var filteredRecipes7;
+    
+    
+     //edit the selected spices to a simpler name
+    for(var i = 0; i < data.length; i++){
+        data[i].ProductDescription = changeProdName(data[i].ProductDescription);
+    }
+    
+    //remove the word "Recipe" from the dish names
+    for(var j = 0; j < recipes.length; j++){
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace('(Recipe)','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace('Recipe','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace(' Recipe','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace('Recipe ','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace(' Recipe ','');
+        recipes[j].TranslatedRecipeName = recipes[j].TranslatedRecipeName.replace('recipe','');
+    }
+    
+
+    
+    
+    //remove all duplicates from the list of the data we're looking for
+    removeDuplicates("Garam Masala");
+    removeDuplicates("Nutmeg Powder");
+    removeDuplicates("Bay Leaves");
+    removeDuplicates("Butter Chicken");
+    removeDuplicates("Cinnamon Powder");
+    removeDuplicates("Fennel Powder");
+    removeDuplicates("Nutmeg Powder");
+    removeDuplicates("Pepper Powder");
+    removeDuplicates("Coriander Powder");
+    removeDuplicates("Fenugreek Powder");
+    removeDuplicates("Biryani Spice");
+    removeDuplicates("Panchpuran");
+    
+//Bubble Sort the spices
+ for(i = 0; i < data.length; i++){
+    
+   // Last i elements are already in place 
+   for(j = 1; j < ( data.length - i); j++){
+      
+     // Checking if the item at present iteration
+     // is greater than the next iteration
+     if(+data[j-1].StandardQty < +data[j].StandardQty){
+        
+       // If the condition is true then swap them
+       var temp = data[j-1]
+       data[j-1] = data[j]
+       data[j] = temp;
+     }
+   }
+ }
+    
+    filterdData = data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)});
+    
+    
+    xScale.domain(data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)}).map(function(d){ 
+        
+        return d.ProductDescription; 
+    
+    }));
+    
+    yScale.domain([0,d3.max(data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)}), function(d) {return +d.StandardQty; })]);
+    
+    
+    if(filterdData.length >= 3){
+    filteredRecipes1 = recipes.filter(function(d) { return filterRecipes(d.TranslatedIngredients, 1)});
+    filteredRecipes3 = recipes.filter(function(d) { return filterRecipes(d.TranslatedIngredients, 3)});
+    filteredRecipes4 = recipes.filter(function(d) { return filterRecipes(d.TranslatedIngredients, 4)});
+    }
+    
+    if(filterdData.length >= 2){
+    filteredRecipes2 = recipes.filter(function(d) { return filterRecipes(d.TranslatedIngredients, 2)});
+    }
+     if(filterdData.length >= 1){
+    filteredRecipes5 = recipes.filter(function(d) { return filterRecipes(d.TranslatedIngredients, 5)});
+    filteredRecipes6 = recipes.filter(function(d) { return filterRecipes(d.TranslatedIngredients, 6)});
+    }
+    
+
+    length = 0;
+    
+    //legend box
+        svg.append("rect")
+        //set the x coordinate of a given bar. Make it scale to a value of gdp.country.
+       .attr("x", width/3)
+        //set the y coordinate of a given bar. Make it scale to a value of gdp.country.
+        .attr("y", 0)
+        //set the width and height of each bar with a simular method to setting the coordinates.
+        .attr("width", 2*width/3)
+        .attr("height", height)
+        .style("stroke-width", 2)    // set the stroke width
+        .style("stroke", "black") 
+        //fill the recatanle with a rbg that is more blue the higher the gdp
+        //.attr("fill", "white");
+        .attr("fill", "lightgray");
+
+    
+length = 0; 
+    
+   //this is for the white text inside of each bar in the bar graph
+    svg.selectAll("text")
+        //gather the data
+     .data(recipes)
+     .enter()
+       //create text
+       .append("text")
+        //.filter(function(d) { return filter(d.TranslatedIngredients, chosenCountry)})
+        .filter(function(d) { 
+        if(length < maxLength){
+        if(filterdData.length >= 3 && filteredRecipes1.length > 0){
+        return filterRecipes(d.TranslatedIngredients,1);
+    }else{
+        if(filterdData.length >= 2 && filteredRecipes2.length > 0){
+        return filterRecipes(d.TranslatedIngredients,2);
+        }else{
+        if(filterdData.length >= 3 && filteredRecipes3.length > 0){
+        return filterRecipes(d.TranslatedIngredients,3); 
+        }else{
+          if(filterdData.length >= 3 && filteredRecipes4.length > 0){
+          return filterRecipes(d.TranslatedIngredients,4); 
+        }else{
+          if(filterdData.length >= 1 && filteredRecipes5.length > 0){
+          return filterRecipes(d.TranslatedIngredients,5);  
+        }else{
+           if(filterdData.length >= 1 && filteredRecipes6.length > 0){
+          return filterRecipes(d.TranslatedIngredients,6);  
+        }else{
+          if(filterdData.length >= 1){
+          return filterRecipes(d.TranslatedIngredients,7); 
+          }else{
+           return false;
+          }
+        }
+        }
+        }
+        }
+    }
+    }
+        }
+    })
+       //make the 0,0 coordinate of the text its center
+    
+       .attr("text-anchor", "middle")
+       //make an animation where it comes into frame
+       .transition().duration(1000)
+       .delay(function(d,i) {return i * 200;})
+       //define the text to be of a given bar's associated gdp value
+        //use .html for spacing
+       .text(function(d) {
+            return d.TranslatedRecipeName;
+            //return "Contains: " + contains(d.TranslatedIngredients);
+        })
+        
+       //set the x coordinate and offset it per bar generated
+       .attr("x", function(d) {
+            return 2*width/3;
+        })
+       //set the y coordinate of the text to be the top of the bar and ten pixels down
+       .attr("y", function(d,i) {
+            return height/4 + (i * 40);
+        })
+       //set text traits like the font and color
+       .attr("font-family", "sans-serif")
+       .attr("font-size", "11px")
+       .attr("fill", "black");
+    
+    length = 0; 
+    
+    //this is for the white text inside of each bar in the bar graph
+    svg.selectAll("text2")
+        //gather the data
+     .data(recipes)
+     .enter()
+       //create text
+       .append("text")
+        //.filter(function(d) { return filter(d.TranslatedIngredients, chosenCountry)})
+        .filter(function(d) { 
+        if(length < maxLength){
+        if(filterdData.length >= 3 && filteredRecipes1.length > 0){
+        return filterRecipes(d.TranslatedIngredients,1);
+    }else{
+        if(filterdData.length >= 2 && filteredRecipes2.length > 0){
+        return filterRecipes(d.TranslatedIngredients,2);
+        }else{
+        if(filterdData.length >= 3 && filteredRecipes3.length > 0){
+        return filterRecipes(d.TranslatedIngredients,3); 
+        }else{
+          if(filterdData.length >= 3 && filteredRecipes4.length > 0){
+          return filterRecipes(d.TranslatedIngredients,4); 
+        }else{
+          if(filterdData.length >= 1 && filteredRecipes5.length > 0){
+          return filterRecipes(d.TranslatedIngredients,5);  
+        }else{
+           if(filterdData.length >= 1 && filteredRecipes6.length > 0){
+          return filterRecipes(d.TranslatedIngredients,6);  
+        }else{
+          if(filterdData.length >= 1){
+          return filterRecipes(d.TranslatedIngredients,7); 
+          }else{
+           return false;
+          }
+        }
+        }
+        }
+        }
+    }
+    }
+        }
+    })
+       //make the 0,0 coordinate of the text its center
+    
+       .attr("text-anchor", "middle")
+       //make an animation where it comes into frame
+       .transition().duration(1000)
+       .delay(function(d,i) {return i * 200;})
+       //define the text to be of a given bar's associated gdp value
+        //use .html for spacing
+       .text(function(d) {
+            //return d.TranslatedRecipeName;
+            return "Contains: " + contains(d.TranslatedIngredients);
+        })
+        
+       //set the x coordinate and offset it per bar generated
+       .attr("x", function(d) {
+            return 2*width/3;
+        })
+       //set the y coordinate of the text to be the top of the bar and ten pixels down
+       .attr("y", function(d,i) {
+            return height/4 + 20+ (i * 40);
+        })
+       //set text traits like the font and color
+       .attr("font-family", "sans-serif")
+       .attr("font-size", "11px")
+       .attr("fill", "black");
+    
+    
+    
+    //make y axis lable
+    svg.append("text")
+    //create label
+    .attr("class", "y label")
+    //define our text 
+    .text("Top 5 Most Popular Indian Dishes in: " + chosenCountry)
+    //put the 0,0 coordinate in the middle of our text for easy rotation
+    .attr("font-size", "20px")
+    .attr("text-anchor", "middle")
+    //rotate text
+    .attr('transform', 'translate(' + 2*width/3 + ',' + 40 + ')'); 
+    
+    //make y axis lable
+    svg.append("text")
+    //create label
+    .attr("class", "y label")
+    //define our text 
+    .text("Based on Import Data")
+    //put the 0,0 coordinate in the middle of our text for easy rotation
+    .attr("font-size", "15px")
+    .attr("text-anchor", "middle")
+    //rotate text
+    .attr('transform', 'translate(' + 2*width/3 + ',' + 60 + ')'); 
+  
+    
+    
+     function removeDuplicates(dup){
+         var firsItem = true;
+    for(var j = 0; j < data.length; j++){
+        
+        if(data[j].ProductDescription == dup){
+            if(firsItem){
+               var saveIndex = j;
+            }
+            if(!firsItem){
+              
+              data[saveIndex].StandardQty = +data[saveIndex].StandardQty + +data[j].StandardQty;
+              data[j].ProductDescription = "unused";
+            }
+            firsItem = false;
+        }
+    }
+    }
+    //how about we find out what's popular by finding recipes that have the top 3 highest quantity spices in them
+    function filterRecipes(recipe, type){
+        var filterdData = data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)});
+        
+
+        //console.log("first:" + filterdData[highestIndex].ProductDescription);
+        //console.log("second: " + filterdData[secondHighestIndex].ProductDescription);
+        
+        
+        if(type == 1){
+        
+        if( (recipe.toUpperCase()).includes((filterdData[0].ProductDescription).toUpperCase()) &&
+              (recipe.toUpperCase()).includes((filterdData[1].ProductDescription).toUpperCase()) &&
+              (recipe.toUpperCase()).includes((filterdData[2].ProductDescription).toUpperCase())
+          
+          ) {
+              length++;
+              return true;
+           }else{
+               
+             return false;
+           }
+    }
+        
+        if(type == 2){
+        
+        if(   (recipe.toUpperCase()).includes((filterdData[0].ProductDescription).toUpperCase()) &&
+              (recipe.toUpperCase()).includes((filterdData[1].ProductDescription).toUpperCase()) //&&
+            //(recipe.toUpperCase()).includes((filterdData[thirdHighestIndex].ProductDescription).toUpperCase())
+          
+          ) {
+              length++;
+              return true;
+           }else{
+               
+             return false;
+           }
+    }
+        
+         if(type == 3){
+        
+        if(   (recipe.toUpperCase()).includes((filterdData[0].ProductDescription).toUpperCase()) &&
+               //(recipe.toUpperCase()).includes((filterdData[1].ProductDescription).toUpperCase()) //&&
+              (recipe.toUpperCase()).includes((filterdData[2].ProductDescription).toUpperCase())
+          
+          ) {
+              length++;
+              return true;
+           }else{
+               
+             return false;
+           }
+    }
+        
+        if(type == 4){
+        
+        if(   //(recipe.toUpperCase()).includes((filterdData[0].ProductDescription).toUpperCase()) &&
+              (recipe.toUpperCase()).includes((filterdData[1].ProductDescription).toUpperCase()) &&
+              (recipe.toUpperCase()).includes((filterdData[2].ProductDescription).toUpperCase())
+          
+          ) {
+              length++;
+              return true;
+           }else{
+               
+             return false;
+           }
+    }
+        
+        if(type == 5){
+        
+        if(   (recipe.toUpperCase()).includes((filterdData[0].ProductDescription).toUpperCase()) //&&
+              //(recipe.toUpperCase()).includes((filterdData[1].ProductDescription).toUpperCase()) &&
+              //(recipe.toUpperCase()).includes((filterdData[2].ProductDescription).toUpperCase())
+          
+          ) {
+              length++;
+              return true;
+           }else{
+               
+             return false;
+           }
+    }
+        
+        if(type == 6){
+        
+        if(   //(recipe.toUpperCase()).includes((filterdData[0].ProductDescription).toUpperCase()) //&&
+              (recipe.toUpperCase()).includes((filterdData[1].ProductDescription).toUpperCase()) //&&
+              //(recipe.toUpperCase()).includes((filterdData[2].ProductDescription).toUpperCase())
+          
+          ) {
+              length++;
+              return true;
+           }else{
+               
+             return false;
+           }
+    }
+        
+        if(type == 7){
+        
+        if(   //(recipe.toUpperCase()).includes((filterdData[0].ProductDescription).toUpperCase()) //&&
+              //(recipe.toUpperCase()).includes((filterdData[1].ProductDescription).toUpperCase()) //&&
+              (recipe.toUpperCase()).includes((filterdData[2].ProductDescription).toUpperCase())
+          
+          ) {
+              length++;
+              return true;
+           }else{
+               
+             return false;
+           }
+    }
+        
+    }
+    
+    
+    function contains(recipe){
+    var filterdData = data.filter(function(d) { return filter(d.ProductDescription, d.CountryofDestination)});
+        var spiceList = "";
+        
+         for (var i = 0; i < filterdData.length; i++){
+        
+            
+          if((recipe.toUpperCase()).includes((filterdData[i].ProductDescription).toUpperCase())){
+          if(spiceList != ""){
+             spiceList += ", "
+          }
+          spiceList += filterdData[i].ProductDescription;
+         }
+    }
+        
+    return spiceList;
+    }
+    
+    
+    
+});
+}
+*/
+
+</script>
+<div id="map"></div>
+<p4>
+Created by:   <br>
+Steven Lassen (slassen@ucsc.edu)   <br>
+Vamsi Garlapati (vgarlapa@ucsc.edu) <br>
+In collaboration with Professor Suresh Lodha <br>
+Designed for: CSE: Data Programming for Visualization, Fall 2022 <br>
+Files: </p4>
+<p4> <a href="https://github.com/StevenLassen/CSE163FinalProject-IndianSpices"> <br> Github Link </a> </p4>
+<p4> <br> Visual Sources: </p4>
+<p4> <a href="https://www.kaggle.com/code/jchymdvok/most-frequently-used-indian-spices/notebook"> <br> Most frequently used indian spices </a> </p4>
+<p4> <a href="https://sureshlodha.github.io/CMPS165_Spring2018/FinalProjects/TradeWars/index.html"> <br> Inspired by </a> </p4>
+<p4> <br> Code Sources: </p4>
+<p4> <a href="https://observablehq.com/@d3/lets-make-a-bar-chart"> <br> Let’s Make a Bar Chart </a> </p4>
+<p4> <a href="https://gist.github.com/woodyrew/645d0258415db9205da52cb0e049ca28"> <br> Simple d3 v5 tooltips </a> </p4>
+<p4> <a href="https://stackoverflow.com/questions/22853775/how-do-you-bubble-sort-largest-to-smallest"> <br> Bubblesort Largest to Smallest </a> </p4>
+<p4> <br> Data Sources: </p4>
+<p4> <a href="https://unpkg.com/world-atlas@1.1.4/world/110m.json"> <br> World Map </a></p4>
+<p4> <a href="https://github.com/alisle/world-110m-country-codes/blob/master/world-110m-country-codes.json"> <br> Linking Map ids to Countries </a></p4>
+<p4> <a href="https://www.volza.com/p/spice/export/export-from-india/"> <br> volza.com </a></p4>
+<p4> <a href="https://www.kaggle.com/datasets/kanishk307/6000-indian-food-recipes-dataset"> <br> 6000+ Indian Food Recipes Dataset </a> </p4>
