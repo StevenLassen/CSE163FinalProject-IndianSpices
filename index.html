@@ -527,7 +527,7 @@ var yScale = d3.scaleLinear().range([height, 30]);
 var xAxis = d3.axisBottom(xScale);
 var yAxis = d3.axisLeft(yScale);
 
-var file = "/CountryData/" + chosenCountry + ".csv";
+var file = "CountryData/" + chosenCountry + ".csv";
 
 
 d3.queue()
@@ -825,7 +825,7 @@ the difference between .csv, .tsv and .json files. To import a .tsv or
 // data.csv contains the country name(key) and its GDP(value)
 // d.key and d.value are very important commands
 //Here we deine our data. Our data is an one array that is comprised of everything in the collum with the country heading and one array comprised of eveything with the gdp heading in the .csv
-var file = "/CountryData/" + chosenCountry + ".csv";
+var file = "CountryData/" + chosenCountry + ".csv";
 
 
 d3.queue()
