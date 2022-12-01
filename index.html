@@ -1,26 +1,57 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<h2> Indian Spices: Where Do They Go and Their Impact </h2>
-<p5> We are trying to show the importance of Indian spices by showing how widespread they are around the world and how they are essential to global cuisine. How so many popular dishes are dependent on Indian exports.
- </p5>
+
+<head>
+    <h1 id="title"><bold>Indian Spices: Where Do They Go and Their Impact</bold></h1>
+    <div class="row" id="summary">
+                <div class="col-md-10 col-md-offset-1">
+                    <p style="font-size: 1.2em; line-height: 1.7">
+                        This interactive visualization is trying to show the importance of Indian spices by showing how widespread they are around the world and how they are essential to global cuisine. How so many popular dishes around the world are dependent on Indian exports. <br/>
+                        
+                        You can see what spices are exported from india to a given country by clicking on said country. The spice import data is all the spices volza.com has recorded from 2016 to November 2022. The spices are ordered in terms of quantity imported. A quantity of a spice does not have a given measurement in grams due to limitations in the import data however the quantity imported of a given spice suffices in finding the relative popularity of the spice. Especially given how one gram of a spice could be the equivalent of a 100 grams of another spice. <br/>
+                        
+                        This visualization also shows the top five most popular indian dishes in the selected country based on the recorded import data. The dishes are ranked based on a ranking system described below.
+                    </p>
+                </div>
+            </div>    
+    <title>Indian Spices: Where Do They Go and Their Impact</title>
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    
+    
+    
+    
+    
+</head>
+
+
+
 <style>
     
-    
-* {
 
-text-align: center;
 
+#title {
+    text-align: center;
+    font-family: 'Lato', sans-serif;
 }
 
-.counties {
-  fill: none;
+#summary {
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-size: .87em
 }
-
-.states {
-  fill: none;
-  stroke-linejoin: round;
+.countries {
+  fill: #D3D3D3;
+  stroke: #000;
+  stroke-width: 1px;
 }
-    
+   
 /*Define how our tooltip looks like*/
 div.tooltip {
   color: white;
@@ -34,6 +65,14 @@ div.tooltip {
   border: 2px solid black;
   pointer-events: none;
 }
+
+.sources_list {
+    list-style-type: none; 
+    padding: 0px !important;
+    font-size: 1.1em;
+}
+
+    
 
 
 
@@ -404,14 +443,15 @@ g.call(d3.axisBottom(x)
          return "#00FF00"; 
        }
       
-      if(densityById.get(+d.id) == 0){
-         return "#000000"; 
-       }
+      /*if(densityById.get(+d.id) == 0 || (+d.id == -99 || +d.id == 275) ){
+         return "#D3D3D3"; 
+       }*/
       
-      return color(densityById.get(+d.id)); 
+      if(densityById.get(+d.id) != 0) {
+        return color(densityById.get(+d.id)); 
   
+      }
   })
-    .attr("stroke-width", "5px")
       .attr("d", path)
       .on('mouseover', function(d) {
       var desc = "";
@@ -441,6 +481,7 @@ g.call(d3.axisBottom(x)
         .style('opacity', 0);
     })
      .on('click', d => {
+        console.log(d.id)
         if(densityById.get(+d.id) != 0 && nameById.get(+d.id) != chosenCountry && nameById.get(+d.id) != "India"){
         chosenCountry = nameById.get(+d.id);
         //d3.selectAll("svg > *").remove();
@@ -729,6 +770,7 @@ d3.queue()
     .text("Quantity Imported")
     //put the 0,0 coordinate in the middle of our text for easy rotation
     .attr("text-anchor", "middle")
+    .style("font-size", "15px")
     //rotate text
     .attr('transform', 'translate(' + 0 + ', ' + height/2 + ') rotate(-90)'); 
     
@@ -739,6 +781,7 @@ d3.queue()
     .text(chosenCountry + " Indian Spice Imports")
     //put the 0,0 coordinate in the middle of our text for easy rotation
     .attr("text-anchor", "middle")
+    .style("font-size", "15px")
     //rotate text
     .attr('transform', 'translate(' + 2*width/3 + ', ' + 2 + ')'); 
     
@@ -1024,7 +1067,8 @@ d3.queue()
         })
        //set text traits like the font and color
        .attr("font-family", "sans-serif")
-       .attr("font-size", "11px")
+       .attr("font-size", "14px")
+       .attr("font-weight",function(d) {return 900;})
        .attr("fill", "black");
     
   
@@ -1073,7 +1117,7 @@ d3.queue()
     //define our text 
     .text("Top 5 Most Popular Indian Dishes in: " + chosenCountry)
     //put the 0,0 coordinate in the middle of our text for easy rotation
-    .attr("font-size", "20px")
+    .style("font-size", "20px")
     .attr("text-anchor", "middle")
     //rotate text
     .attr('transform', 'translate(' + (2*width/3 + 15) + ',' + 40 + ')'); 
@@ -1085,7 +1129,7 @@ d3.queue()
     //define our text 
     .text("Based on Import Data")
     //put the 0,0 coordinate in the middle of our text for easy rotation
-    .attr("font-size", "15px")
+    .style("font-size", "15px")
     .attr("text-anchor", "middle")
     //rotate text
     .attr('transform', 'translate(' + (2*width/3 + 15) + ',' + 60 + ')'); 
@@ -1695,24 +1739,77 @@ length = 0;
 */
 
 </script>
+
+<body></body>
 <div id="map"></div>
-<p4>
-Created by:   <br>
-Steven Lassen (slassen@ucsc.edu)   <br>
-Vamsi Garlapati (vgarlapa@ucsc.edu) <br>
-In collaboration with Professor Suresh Lodha <br>
-Designed for: CSE: Data Programming for Visualization, Fall 2022 <br>
-Files: </p4>
-<p4> <a href="https://github.com/StevenLassen/CSE163FinalProject-IndianSpices"> <br> Github Link </a> </p4>
-<p4> <br> Visual Sources: </p4>
-<p4> <a href="https://www.kaggle.com/code/jchymdvok/most-frequently-used-indian-spices/notebook"> <br> Most frequently used indian spices </a> </p4>
-<p4> <a href="https://sureshlodha.github.io/CMPS165_Spring2018/FinalProjects/TradeWars/index.html"> <br> Inspired by </a> </p4>
-<p4> <br> Code Sources: </p4>
-<p4> <a href="https://observablehq.com/@d3/lets-make-a-bar-chart"> <br> Let’s Make a Bar Chart </a> </p4>
-<p4> <a href="https://gist.github.com/woodyrew/645d0258415db9205da52cb0e049ca28"> <br> Simple d3 v5 tooltips </a> </p4>
-<p4> <a href="https://stackoverflow.com/questions/22853775/how-do-you-bubble-sort-largest-to-smallest"> <br> Bubblesort Largest to Smallest </a> </p4>
-<p4> <br> Data Sources: </p4>
-<p4> <a href="https://unpkg.com/world-atlas@1.1.4/world/110m.json"> <br> World Map </a></p4>
-<p4> <a href="https://github.com/alisle/world-110m-country-codes/blob/master/world-110m-country-codes.json"> <br> Linking Map ids to Countries </a></p4>
-<p4> <a href="https://www.volza.com/p/spice/export/export-from-india/"> <br> volza.com </a></p4>
-<p4> <a href="https://www.kaggle.com/datasets/kanishk307/6000-indian-food-recipes-dataset"> <br> 6000+ Indian Food Recipes Dataset </a> </p4>
+
+
+ <div class="row">
+                <div class="col-md-3">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <h4 class="credits">Created By</h4>
+                    <p style="font-size: 1.1em;">
+                        Steven Lassen (slassen@ucsc.edu)<br/>
+                        Vamsi Garlapati (vgarlapa@ucsc.edu)<br/>
+                        In collaboration with Professor Suresh Lodha <br/>
+                    </p>
+                </div>
+            </div>
+
+
+                <div class="col-md-3">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <h4 class="credits">Designed For</h4>
+                    <p style="font-size: 1.1em;">University of California, Santa Cruz <br> CSE 163 Data Programming for Visualization <br> Fall 2022</p>
+                </div>
+</div>
+</div>
+           
+
+<!-- Resources -->                    
+            <div class="row" id="sources">
+                <div class="col-md-3 col-md-offset-1">
+                    <h4 class="sources_header">Files</h4>
+                    <ul class="sources_list"> 
+                        <li><a href="https://github.com/StevenLassen/CSE163FinalProject-IndianSpices">GitHub</a></li> 
+                    </ul>
+                </div>
+
+<div class="col-md-3">
+                    <h4 class="sources_header">Visual Sources</h4>
+                    <ul class="sources_list"> 
+                        <li><a href = 'https://www.kaggle.com/code/jchymdvok/most-frequently-used-indian-spices/notebook'>Most frequently used indian spices</a></li>
+                        <li><a href = 'https://sureshlodha.github.io/CMPS165_Spring2018/FinalProjects/TradeWars/index.html'>Inspired by</a></li>
+                        <li></li>
+                        <li><a href=""></a></li>                        
+                    </ul>
+                </div>
+                
+<div class="col-md-3">
+                    <h4 class="sources_header">Code Sources</h4>                
+                    <ul class="sources_list"> 
+                        <li><a href = 'https://observablehq.com/@d3/lets-make-a-bar-chart'>Let’s Make a Bar Chart</a></li>
+                        <li><a href = 'https://gist.github.com/woodyrew/645d0258415db9205da52cb0e049ca28'>Simple d3 v5 tooltips</a></li>
+                        <li><a href = 'https://stackoverflow.com/questions/22853775/how-do-you-bubble-sort-largest-to-smallest'>Bubblesort Largest to Smallest</a></li>                        
+                        <li></li> 
+                        <li></li> 
+                    </ul>
+                </div>
+                
+<div class="col-md-2">
+                    <h4 class="sources_header">Data Sources</h4>                
+                    <ul class="sources_list"> 
+                        <li><a href = 'https://unpkg.com/world-atlas@1.1.4/world/110m.json'> World Map </a></li>
+                        <li><a href = 'https://github.com/alisle/world-110m-country-codes/blob/master/world-110m-country-codes.json'> Linking Map ids to Countries </a></li> 
+                        <li><a href = 'https://www.volza.com/p/spice/export/export-from-india/'> Indian Spice Import Data </a></li> 
+                        <li><a href = 'https://www.kaggle.com/datasets/kanishk307/6000-indian-food-recipes-dataset'> 6000+ Indian Food Recipes Dataset </a></li> 
+                        <li></li> 
+                        <li></li> 
+                        <li></li>                        
+                        <li></li> 
+                        <li></li> 
+                    </ul>
+                </div>
+
+
+
