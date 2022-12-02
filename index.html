@@ -58,7 +58,7 @@ div.tooltip {
   position: absolute;
   display:inline;
   width: 150px;
-  height: 43px;
+  height: 55px;
   padding: 2px;
   font: 12px sans-serif;
   background: rgba(0,0,0,.8);
@@ -169,6 +169,7 @@ var chosenCountry;
     function changeProdName(product){
     if((product.toUpperCase()).includes(("GARAM MASALA").toUpperCase())){return "Garam Masala"}
     if((product.toUpperCase()).includes(("Nutmeg").toUpperCase())){return "Nutmeg Powder"}
+    if((product.toUpperCase()).includes(("Netmeg").toUpperCase())){return "Nutmeg Powder"}
     if((product.toUpperCase()).includes(("BAY LEAVES").toUpperCase())){return "Bay Leaves"}
     if((product.toUpperCase()).includes(("Curry Leaf").toUpperCase())){return "Bay Leaves"}
     if((product.toUpperCase()).includes(("Cinnamon Powder").toUpperCase())){return "Cinnamon Powder"}
@@ -200,6 +201,7 @@ var chosenCountry;
     if((product.toUpperCase()).includes(("Cumin Powder").toUpperCase())){return "Cumin Powder"}
     if((product.toUpperCase()).includes(("JEERA POWDERX500GMS").toUpperCase())){return "Cumin Powder"}
     if((product.toUpperCase()).includes(("Jeera").toUpperCase())){return "Cumin Powder"}
+    if((product.toUpperCase()).includes(("JERAGOTA").toUpperCase())){return "Cumin Powder"}
     if((product.toUpperCase()).includes(("Pepper Powder").toUpperCase())){return "Pepper Powder"}
     if((product.toUpperCase()).includes(("Poppy Seed").toUpperCase())){return "Poppy Seed"}
     if((product.toUpperCase()).includes(("Kabsa Spice").toUpperCase())){return "Kabsa Spice"} 
@@ -213,9 +215,9 @@ var chosenCountry;
     if((product.toUpperCase()).includes(("Curcuma").toUpperCase())){return "Turmeric Powder"}
     if((product.toUpperCase()).includes(("Chilli Powder").toUpperCase())){return "Chilli Powder"}
     if((product.toUpperCase()).includes(("Chilly Powder").toUpperCase())){return "Chilli Powder"}
-    if((product.toUpperCase()).includes(("Chillie Powder").toUpperCase())){return "Chillie Powder"}
-    if((product.toUpperCase()).includes(("Chillie Powder").toUpperCase())){return "Chillie Powder"}
-    if((product.toUpperCase()).includes(("CHILLIES(GENUS CAPSICUM)(SPICES)(API )").toUpperCase())){return "Chillie Powder"}
+    if((product.toUpperCase()).includes(("Chillie Powder").toUpperCase())){return "Chilli Powder"}
+    if((product.toUpperCase()).includes(("Chillie Powder").toUpperCase())){return "Chilli Powder"}
+    if((product.toUpperCase()).includes(("CHILLIES(GENUS CAPSICUM)(SPICES)(API )").toUpperCase())){return "Chilli Powder"}
     if((product.toUpperCase()).includes(("Capsicum").toUpperCase())){return "Chilli Powder"}
     if((product.toUpperCase()).includes(("Tikhalal Powder").toUpperCase())){return "Chilli Powder"}
     if((product.toUpperCase()).includes(("Pickle Masala").toUpperCase())){return "Pickle Masala"}
@@ -229,9 +231,12 @@ var chosenCountry;
     if((product.toUpperCase()).includes(("Kabab Masala").toUpperCase())){return "Kabab Masala"}
     if((product.toUpperCase()).includes(("Pumpkin Spice").toUpperCase())){return "Kaddu"}
     if((product.toUpperCase()).includes(("Ginger Powder").toUpperCase())){return "Ginger Powder"}
-    if((product.toUpperCase()).includes(("Ginger Spice").toUpperCase())){return "Ginger Powder"}
+    if((product.toUpperCase()).includes(("Ginger Spice").toUpperCase())){return "Ginger Powder"} 
+    if((product.toUpperCase()).includes(("Freshkencur").toUpperCase())){return "Ginger Powder"}
+    if((product.toUpperCase()).includes(("Kencur").toUpperCase())){return "Ginger Powder"}
     if((product.toUpperCase()).includes(("Cardamom").toUpperCase())){return "Cardamom"} 
-    if((product.toUpperCase()).includes(("Cardmom").toUpperCase())){return "Cardamom"}
+    if((product.toUpperCase()).includes(("Cardmom").toUpperCase())){return "Cardamom"} 
+    if((product.toUpperCase()).includes(("Gautemala").toUpperCase())){return "Cardamom"}
     if((product.toUpperCase()).includes(("Elaichi").toUpperCase())){return "Cardamom"}
     if((product.toUpperCase()).includes(("Bhaji Masala").toUpperCase())){return "Bhaji Masala"}
     if((product.toUpperCase()).includes(("Sabji Masala").toUpperCase())){return "Sabji Masala"}
@@ -242,7 +247,7 @@ var chosenCountry;
     if((product.toUpperCase()).includes(("Mustard").toUpperCase())){return "Mustard"}
     if((product.toUpperCase()).includes(("Rai").toUpperCase())){return "Mustard"}
     if((product.toUpperCase()).includes(("Jaggery").toUpperCase())){return "Jaggery"}
-    if((product.toUpperCase()).includes(("Dhania Jeera Powder").toUpperCase())){return "Dhania Jeera Powder"}
+    if((product.toUpperCase()).includes(("Dhania Jeera Powder").toUpperCase())){return "Cumin Powder"}
     if((product.toUpperCase()).includes(("Poppy Seeds").toUpperCase())){return "Poppy Seeds"}
     if((product.toUpperCase()).includes(("Poppy Seed").toUpperCase())){return "Poppy Seeds"}
     if((product.toUpperCase()).includes(("Pulikulambu Powder").toUpperCase())){return "Pulikulambu Powder"}
@@ -255,7 +260,10 @@ var chosenCountry;
     if((product.toUpperCase()).includes(("Paprika").toUpperCase())){return "Paprika"}
     if((product.toUpperCase()).includes(("Mace").toUpperCase())){return "Mace"}
     if((product.toUpperCase()).includes(("Tamarind Powder").toUpperCase())){return "Tamarind Powder"}
-    if((product.toUpperCase()).includes(("Tulsi Licorice").toUpperCase())){return "Tulsi Licorice"} 
+    if((product.toUpperCase()).includes(("Tulsi Licorice").toUpperCase())){return "Tulsi Licorice"}
+    if((product.toUpperCase()).includes(("Kalia Masala").toUpperCase())){return "Kalia Masala"}
+    if((product.toUpperCase()).includes(("Onion").toUpperCase())){return "Onion Powder"}
+    if((product.toUpperCase()).includes(("Plum").toUpperCase())){return "Plum"}
     
     return product;
 }
@@ -316,7 +324,10 @@ var chosenCountry;
          (product.toUpperCase()).includes(("Paprika").toUpperCase()) ||
          (product.toUpperCase()).includes(("Mace").toUpperCase()) ||
          (product.toUpperCase()).includes(("Tamarind Powder").toUpperCase()) ||
-         (product.toUpperCase()).includes(("Tulsi Licorice").toUpperCase())
+         (product.toUpperCase()).includes(("Tulsi Licorice").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Kalia Masala").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Onion Powder").toUpperCase()) ||
+         (product.toUpperCase()).includes(("Plum").toUpperCase())
         
        ) && country == chosenCountry){
         
@@ -577,6 +588,12 @@ d3.queue()
     
      //edit the selected spices to a simpler name
     for(var i = 0; i < data.length; i++){
+        
+        //Also while we're at it if a spice has "NA" listed as its quantity change it to 0
+        if(data[i].StandardQty == "NA"){
+           data[i].StandardQty = 0;
+        }
+        
         data[i].ProductDescription = changeProdName(data[i].ProductDescription);
     }
     
@@ -636,7 +653,10 @@ d3.queue()
     removeDuplicates("Paprika");
     removeDuplicates("Mace"); 
     removeDuplicates("Tamarind Powder"); 
-    removeDuplicates("Tulsi Licorice");
+    removeDuplicates("Tulsi Licorice"); 
+    removeDuplicates("Kalia Masala");
+    removeDuplicates("Onion Powder");
+    removeDuplicates("Plum");
     
     //Bubble Sort the spices
  for(i = 0; i < data.length; i++){
@@ -906,17 +926,17 @@ d3.queue()
     removeDuplicates("Coriander Powder");
     removeDuplicates("Fenugreek Powder");
     removeDuplicates("Biryani Spice");
-    removeDuplicates("Panchpuran");
+    removeDuplicates("Panchpuran"); 
     removeDuplicates("Rasam Powder"); 
     removeDuplicates("Chutney Powder");
     removeDuplicates("Vangibath Powder");
-    removeDuplicates("Puliyogare Powder");
-    removeDuplicates("Sambar Powder");
-    removeDuplicates("Chai Spices");
+    removeDuplicates("Puliyogare Powder"); 
+    removeDuplicates("Sambar Powder"); 
+    removeDuplicates("Chai Spices"); 
     removeDuplicates("Cumin Powder");
     removeDuplicates("Pepper Powder");
-    removeDuplicates("Poppy Seed");
-    removeDuplicates("Kabsa Spice");
+    removeDuplicates("Poppy Seed"); 
+    removeDuplicates("Kabsa Spice"); 
     removeDuplicates("Madras Curry Powder");
     removeDuplicates("Chana Masala Powder");
     removeDuplicates("Meat Masala");
@@ -924,9 +944,9 @@ d3.queue()
     removeDuplicates("Chilli Powder");
     removeDuplicates("Pickle Masala");
     removeDuplicates("Garlic Paste");
-    removeDuplicates("Vata Spice Mix");
+    removeDuplicates("Vata Spice Mix"); 
     removeDuplicates("Chaat Masala");
-    removeDuplicates("Mixed Herbs");
+    removeDuplicates("Mixed Herbs"); 
     removeDuplicates("Karam Powder");
     removeDuplicates("Kabab Masala");
     removeDuplicates("Kaddu");
@@ -938,20 +958,23 @@ d3.queue()
     removeDuplicates("Ambar Powder");
     removeDuplicates("Amchur Powder");
     removeDuplicates("Mustard");
-    removeDuplicates("Jaggery");
+    removeDuplicates("Jaggery"); 
     removeDuplicates("Dhania Jeera Powder");
     removeDuplicates("Poppy Seeds");
     removeDuplicates("Pulikulambu Powder");
     removeDuplicates("Oregano");
-    removeDuplicates("Rosemary");
+    removeDuplicates("Rosemary"); 
     removeDuplicates("Basil");
     removeDuplicates("Ajwain");
-    removeDuplicates("Star Anise");
+    removeDuplicates("Star Anise"); 
     removeDuplicates("Anise");
     removeDuplicates("Paprika");
-    removeDuplicates("Mace");
-    removeDuplicates("Tamarind Powder");
-    removeDuplicates("Tulsi Licorice");
+    removeDuplicates("Mace"); 
+    removeDuplicates("Tamarind Powder"); 
+    removeDuplicates("Tulsi Licorice"); 
+    removeDuplicates("Kalia Masala");
+    removeDuplicates("Onion Powder");
+    removeDuplicates("Plum");
     
 //Bubble Sort the spices
  for(i = 0; i < data.length; i++){
